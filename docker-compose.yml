@@ -1,0 +1,16 @@
+version: "2.5"
+services:
+  postgresql:
+    image: postgres
+    restart: always
+    container_name: postgresql
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB_HOST: host.docker.internal
+      POSTGRES_DB_PORT: 5432
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB_NAME: postgres
+    volumes:
+      - ./data/postgres/:/var/lib/postgresql/data
