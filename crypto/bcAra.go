@@ -10,9 +10,11 @@ import (
 	"math/big"
 	"strconv"
 	"time"
+
+	"gorm.io/gorm"
 )
 
-const targetBits = 1			// 채굴 난이도
+const targetBits = 16			// 채굴 난이도
 const maxNonce = math.MaxInt64	// nonce overflow 방지
 const nonceStartAtZero = 0
 
@@ -61,8 +63,6 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 		Hash: []byte{},
 		Nonce: nonceStartAtZero,
 	}
-	// [Deprecated] --> block.SetHash()
-	// 이제는 채굴이 필요함
 	pow := NewProofOfWork(block)
 	block.Nonce, block.Hash = pow.Run()
 	return block
@@ -83,9 +83,13 @@ func (bc *Blockchain) AddBlock(data string) {
 }
 
 /* Blockchain constructor */
-func NewBlockChain() *Blockchain {
-	return &Blockchain{blocks: []*Block{NewGenesisBlock()}}
+func NewBlockchain(db *gorm.DB) *Blockchain {
+	// var tip []byte
+	// db, err := storage.NewConnection(config)
+	
+	return &Blockchain{[]*Block{NewGenesisBlock()}}
 }
+
 
 type ProofOfWork struct {
 	block *Block
@@ -162,4 +166,9 @@ type Repository struct {
 // 	headers := bytes.Join([][]byte{b.PrevBlockHash, b.Data, timestamp}, []byte{})
 // 	hash := sha256.Sum256(headers)	// Hash Algorithm : SHA-256
 // 	b.Hash = hash[:]
+// }
+
+/* [DEPRECATED] */
+// func NewBlockchain(config storage.Config) *Blockchain {
+// 	return &Blockchain{[]*Block{NewGenesisBlock()}}
 // }
